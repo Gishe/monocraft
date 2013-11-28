@@ -27,10 +27,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class EnhancedCraftingGui extends GuiContainer {
 
     private static boolean isNEIActive;
+    private ShadowCraftingContainer shadowCraftingContainer;
 
     public EnhancedCraftingGui(EntityPlayer player, World world, int x, int y, int z) {
-
         super(new ShadowCraftingContainer(player.inventory, world, x, y, z));
+
+        shadowCraftingContainer = (ShadowCraftingContainer)inventorySlots;
+        shadowCraftingContainer.craftResult.onInventoryChanged();
     }
 
     /**
@@ -42,6 +45,8 @@ public class EnhancedCraftingGui extends GuiContainer {
 
         fontRenderer.drawString(StatCollector.translateToLocal(Strings.CONTAINER_PORTABLE_CRAFTING), 28, 6, 4210752);
         fontRenderer.drawString(StatCollector.translateToLocal(Strings.CONTAINER_INVENTORY), 8, ySize - 96 + 2, 4210752);
+
+
     }
 
     /**
@@ -56,7 +61,18 @@ public class EnhancedCraftingGui extends GuiContainer {
         int var5 = (width - xSize) / 2;
         int var6 = (height - ySize) / 2;
         this.drawTexturedModalRect(var5, var6, 0, 0, xSize, ySize);
+
+        int outputX = 124, outputY = 35, slotSize=18;
+        this.drawRect(outputX, outputY, outputX + slotSize, outputY + slotSize, -65536);
+
     }
+
+    @Override
+    public void updateScreen()
+    {
+
+    }
+
 
     @Override
     public void onGuiClosed() {
