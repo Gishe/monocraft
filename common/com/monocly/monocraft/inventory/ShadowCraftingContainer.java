@@ -30,10 +30,12 @@ public class ShadowCraftingContainer extends Container {
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     public IInventory craftResult = new InventoryCraftResult();
     public InventoryPlayer craftersInventory;
+    private SlotShadowCrafting slotShadowCrafting;
     private World worldObj;
     private int posX;
     private int posY;
     private int posZ;
+    public boolean canPlayerCraft = false;
 
     public ShadowCraftingContainer(InventoryPlayer par1InventoryPlayer, World par2World, int par3, int par4, int par5) {
         this.worldObj = par2World;
@@ -42,7 +44,8 @@ public class ShadowCraftingContainer extends Container {
         this.posZ = par5;
         craftersInventory = par1InventoryPlayer;
         // Result
-        this.addSlotToContainer(new SlotShadowCrafting(par1InventoryPlayer.player, this.craftMatrix, this.craftResult, 0, 124, 35));
+        slotShadowCrafting = new SlotShadowCrafting(par1InventoryPlayer.player, this.craftMatrix, this.craftResult, this,  0, 124, 35);
+        this.addSlotToContainer(slotShadowCrafting);
         int l;
         int i1;
 
@@ -73,9 +76,13 @@ public class ShadowCraftingContainer extends Container {
      */
     public void onCraftMatrixChanged(IInventory par1IInventory) {
         this.craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.worldObj));
+        setCanPlayerCraft();
+        slotShadowCrafting.hasMaterials = canPlayerCraft;
     }
 
-    public boolean canPlayerCraft() {
+
+
+    public void setCanPlayerCraft() {
         HashMap<Integer, Integer> itemsForRecipe = new HashMap<Integer,Integer>();
 
         for (int i = 0; i < craftMatrix.getSizeInventory(); i++) {
@@ -86,10 +93,11 @@ public class ShadowCraftingContainer extends Container {
                 {
                     Integer count = itemsForRecipe.get(item.itemID);
                     count++;
+                    itemsForRecipe.put(item.itemID, count);
                 }
                 else
                 {
-                    itemsForRecipe.put(item.itemID, 0);
+                    itemsForRecipe.put(item.itemID, 1);
                 }
             }
         }
@@ -99,22 +107,31 @@ public class ShadowCraftingContainer extends Container {
 
             if (is != null)
             {
-                if (itemsForRecipe.containsKey(is.itemID))
-                {
-                    Integer count = itemsForRecipe.get(is.itemID);
-                    if (is.stackSize >= count)
-                    {
-                        itemsForRecipe.remove(is.itemID);
-                    }
-                    else
-                    {
-                        count = count - is.stackSize;
-                    }
-                }
+                updateHashMapBasedOnItemStack(itemsForRecipe, is);
             }
         }
+        ItemStack heldItem = craftersInventory.getItemStack();
+        if (heldItem != null)
+        {
+            updateHashMapBasedOnItemStack(itemsForRecipe, heldItem);
+        }
 
-        return itemsForRecipe.size() == 0;
+        canPlayerCraft = itemsForRecipe.size() == 0;
+    }
+
+    private void updateHashMapBasedOnItemStack(HashMap<Integer, Integer> itemsForRecipe, ItemStack is) {
+        if (itemsForRecipe.containsKey(is.itemID))
+        {
+            Integer count = itemsForRecipe.get(is.itemID);
+            if (is.stackSize >= count)
+            {
+                itemsForRecipe.remove(is.itemID);
+            }
+            else
+            {
+                count = count - is.stackSize;
+            }
+        }
     }
 
 
@@ -124,15 +141,15 @@ public class ShadowCraftingContainer extends Container {
     public void onContainerClosed(EntityPlayer par1EntityPlayer) {
         super.onContainerClosed(par1EntityPlayer);
 
-        if (!this.worldObj.isRemote) {
-            for (int i = 0; i < 9; ++i) {
-                ItemStack itemstack = this.craftMatrix.getStackInSlotOnClosing(i);
-
-                if (itemstack != null) {
-                    par1EntityPlayer.dropPlayerItem(itemstack);
-                }
-            }
-        }
+//        if (!this.worldObj.isRemote) {
+//            for (int i = 0; i < 9; ++i) {
+//                ItemStack itemstack = this.craftMatrix.getStackInSlotOnClosing(i);
+//
+//                if (itemstack != null) {
+//                    par1EntityPlayer.dropPlayerItem(itemstack);
+//                }
+//            }
+//        }
     }
 
     public boolean canInteractWith(EntityPlayer player) {

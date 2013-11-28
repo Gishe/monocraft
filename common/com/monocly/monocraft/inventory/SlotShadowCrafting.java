@@ -20,17 +20,19 @@ public class SlotShadowCrafting extends SlotCrafting {
     public boolean hasMaterials = true;
     protected IInventory craftMatrix;
     protected EntityPlayer player;
+    protected ShadowCraftingContainer craftingContainer;
 
-    public SlotShadowCrafting(EntityPlayer player, IInventory craftMatrix, IInventory craftResult, int par4, int par5, int par6) {
+    public SlotShadowCrafting(EntityPlayer player, IInventory craftMatrix, IInventory craftResult, ShadowCraftingContainer _craftingContainer, int par4, int par5, int par6) {
         super(player, craftMatrix, craftResult, par4, par5, par6);
         this.craftMatrix = craftMatrix;
         this.player = player;
-
+        this.craftingContainer = _craftingContainer;
     }
 
     @Override
-    public boolean isItemValid(ItemStack par1ItemStack)
+    public boolean canTakeStack(EntityPlayer par1EntityPlayer)
     {
+        craftingContainer.setCanPlayerCraft();
         return hasMaterials;
     }
 
@@ -50,6 +52,7 @@ public class SlotShadowCrafting extends SlotCrafting {
                     player.inventory.consumeInventoryItem(is.itemID);
                 }
             }
+            craftingContainer.onCraftMatrixChanged(craftMatrix);
         }
     }
 }

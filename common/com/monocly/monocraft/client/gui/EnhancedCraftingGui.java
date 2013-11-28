@@ -46,7 +46,6 @@ public class EnhancedCraftingGui extends GuiContainer {
         fontRenderer.drawString(StatCollector.translateToLocal(Strings.CONTAINER_PORTABLE_CRAFTING), 28, 6, 4210752);
         fontRenderer.drawString(StatCollector.translateToLocal(Strings.CONTAINER_INVENTORY), 8, ySize - 96 + 2, 4210752);
 
-
     }
 
     /**
@@ -62,8 +61,12 @@ public class EnhancedCraftingGui extends GuiContainer {
         int var6 = (height - ySize) / 2;
         this.drawTexturedModalRect(var5, var6, 0, 0, xSize, ySize);
 
-        int outputX = 124, outputY = 35, slotSize=18;
-        this.drawRect(outputX, outputY, outputX + slotSize, outputY + slotSize, -65536);
+        if (!shadowCraftingContainer.canPlayerCraft)
+        {
+            int outputX = var5 + 123, outputY = var6 + 34, slotSize=18;
+            this.drawRect(outputX, outputY, outputX + slotSize, outputY + slotSize, -65536);
+        }
+
 
     }
 
