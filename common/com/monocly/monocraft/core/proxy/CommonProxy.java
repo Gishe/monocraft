@@ -1,12 +1,11 @@
 package com.monocly.monocraft.core.proxy;
 
+import com.monocly.monocraft.inventory.ShadowCraftingContainer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.world.World;
 
 import com.monocly.monocraft.client.gui.EnhancedCraftingGui;
 import com.monocly.monocraft.constants.GuiIds;
-import com.monocly.monocraft.inventory.ContainerWBCopy;
 
 import cpw.mods.fml.common.network.IGuiHandler;
 
@@ -31,7 +30,7 @@ public class CommonProxy implements IGuiHandler
         switch(ID)
         {
             case 0:
-                return new ContainerWBCopy(player.inventory, world, x, y, z);
+                return new ShadowCraftingContainer(player.inventory, world, x, y, z);
         }
                     
         return null;

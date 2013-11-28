@@ -1,7 +1,11 @@
 package com.monocly.monocraft.item;
 
+
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.Packet100OpenWindow;
 import net.minecraft.world.World;
 
 import com.monocly.monocraft.Monocraft;
@@ -49,16 +53,29 @@ public class PersonalCraftingTable extends MonocraftItem
     }
     
     @Override
-    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
     {
         if (!player.isSneaking())
         {
-            player.openGui(Monocraft.instance, GuiIds.PORTABLE_CRAFTING, world, x, y, z);
+            player.openGui(Monocraft.instance, 0, world, x, y, z);
             return true;
-        }else
-        {
-            return false;
         }
+        return false;
+//        if (!world.isRemote && !player.isSneaking())
+//        {
+//            EntityPlayerMP playerMP = (EntityPlayerMP) player;
+//            playerMP.incrementWindowID();
+//            playerMP.playerNetServerHandler.sendPacketToPlayer(new Packet100OpenWindow(playerMP.currentWindowId, 1, "Crafting", 9, true));
+//            playerMP.openContainer = new ContainerPortableCrafting(player.inventory, player.worldObj, x, y ,z);
+//            playerMP.openContainer.windowId = playerMP.currentWindowId;
+//            playerMP.openContainer.addCraftingToCrafters(playerMP);
+//
+//            player.openGui(Monocraft.instance, GuiIds.PORTABLE_CRAFTING, world, x, y, z);
+//            return true;
+//        }else
+//        {
+//            return false;
+//        }
     }
         
 

@@ -1,11 +1,5 @@
 package com.monocly.monocraft.inventory;
 
-import com.monocly.monocraft.Monocraft;
-import com.monocly.monocraft.block.EnhancedCraftingTable;
-import com.monocly.monocraft.block.ModBlocks;
-
-
-import com.monocly.monocraft.item.ItemInfo;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -14,8 +8,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotCrafting;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.world.World;
@@ -25,12 +17,12 @@ import net.minecraft.world.World;
 /**
  * monocraft
  * com.monocly.monocraft.inventory
- * ContainerWBCopy.java
+ * ShadowCraftingContainer.java
  * 
  * @author Monocly
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
-public class ContainerWBCopy extends Container
+public class ShadowCraftingContainer extends Container
 {
     /** The crafting matrix inventory (3x3). */
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
@@ -40,24 +32,27 @@ public class ContainerWBCopy extends Container
     private int posY;
     private int posZ;
 
-    public ContainerWBCopy(InventoryPlayer par1InventoryPlayer, World par2World, int par3, int par4, int par5)
+    public ShadowCraftingContainer(InventoryPlayer par1InventoryPlayer, World par2World, int par3, int par4, int par5)
     {
         this.worldObj = par2World;
         this.posX = par3;
         this.posY = par4;
         this.posZ = par5;
-        this.addSlotToContainer(new SlotCrafting(par1InventoryPlayer.player, this.craftMatrix, this.craftResult, 0, 124, 35));
+        // Result
+        this.addSlotToContainer(new SlotShadowCrafting(par1InventoryPlayer.player, this.craftMatrix, this.craftResult, 0, 124, 35));
         int l;
         int i1;
 
+        // 3x3 crafting grid
         for (l = 0; l < 3; ++l)
         {
             for (i1 = 0; i1 < 3; ++i1)
             {
-                this.addSlotToContainer(new Slot(this.craftMatrix, i1 + l * 3, 30 + i1 * 18, 17 + l * 18));
+                this.addSlotToContainer(new SlotShadow(this.craftMatrix, i1 + l * 3, 30 + i1 * 18, 17 + l * 18));
             }
         }
 
+        // Players inventory
         for (l = 0; l < 3; ++l)
         {
             for (i1 = 0; i1 < 9; ++i1)
@@ -66,6 +61,7 @@ public class ContainerWBCopy extends Container
             }
         }
 
+        // Players hotbar
         for (l = 0; l < 9; ++l)
         {
             this.addSlotToContainer(new Slot(par1InventoryPlayer, l, 8 + l * 18, 142));
@@ -105,16 +101,17 @@ public class ContainerWBCopy extends Container
 
     public boolean canInteractWith(EntityPlayer player)
     {
-        ItemStack item = player.getCurrentEquippedItem(); 
-        if (item != null &&
-                item.itemID == ItemInfo.PERSONAL_CRAFTING_TABLE_ID)
-        {
-            return true;
-        }
-        else
-        {
-            return this.worldObj.getBlockId(this.posX, this.posY, this.posZ) != ModBlocks.ect.blockID ? false : player.getDistanceSq((double)this.posX + 0.5D, (double)this.posY + 0.5D, (double)this.posZ + 0.5D) <= 64.0D;
-        }
+        return true;
+//        ItemStack item = player.getCurrentEquippedItem();
+//        if (item != null &&
+//                item.itemID == ItemInfo.PERSONAL_CRAFTING_TABLE_ID)
+//        {
+//            return true;
+//        }
+//        else
+//        {
+//            return this.worldObj.getBlockId(this.posX, this.posY, this.posZ) != ModBlocks.ect.blockID ? false : player.getDistanceSq((double)this.posX + 0.5D, (double)this.posY + 0.5D, (double)this.posZ + 0.5D) <= 64.0D;
+//        }
     }
 
     /**
@@ -182,4 +179,30 @@ public class ContainerWBCopy extends Container
     {
         return par2Slot.inventory != this.craftResult && super.func_94530_a(par1ItemStack, par2Slot);
     }
+
+    @Override
+    public ItemStack slotClick(int par1, int par2, int par3, EntityPlayer player)
+    {
+        Slot s = (Slot)this.inventorySlots.get(par1);
+
+        if (s != null && s instanceof SlotShadow)
+        {
+            SlotShadow slotShadow = (SlotShadow)s;
+            ItemStack currentItem = player.inventory.getItemStack();
+            if (currentItem != null)
+            {
+                slotShadow.putStack(new ItemStack(currentItem.getItem(), 1));
+            }
+            else
+            {
+                slotShadow.putStack(null);
+            }
+            return currentItem;
+        }
+        else
+        {
+            return super.slotClick(par1, par2, par3, player);
+        }
+    }
+
 }

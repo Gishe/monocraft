@@ -20,8 +20,8 @@ public class Strings
     
     public static final String PERSONAL_CRAFTING_TABLE_NAME = "Personal Crafting Table";
 
-    public static final String CONTAINER_PORTABLE_CRAFTING = "CONTAINER_PORTABLE_CRAFTING";
+    public static final String CONTAINER_PORTABLE_CRAFTING = "Crafting";
 
-    public static final String CONTAINER_INVENTORY = "CONTAINER_INVENTORY";
+    public static final String CONTAINER_INVENTORY = "Inventory";
     
 }

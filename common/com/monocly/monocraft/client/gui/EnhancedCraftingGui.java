@@ -2,7 +2,6 @@ package com.monocly.monocraft.client.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -11,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.monocly.monocraft.constants.Strings;
 import com.monocly.monocraft.constants.Textures;
-import com.monocly.monocraft.inventory.ContainerWBCopy;
+import com.monocly.monocraft.inventory.ShadowCraftingContainer;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -27,9 +26,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class EnhancedCraftingGui extends GuiContainer {
 
+    private static boolean isNEIActive;
+
     public EnhancedCraftingGui(EntityPlayer player, World world, int x, int y, int z) {
 
-        super(new ContainerWBCopy(player.inventory, world, x, y, z));
+        super(new ShadowCraftingContainer(player.inventory, world, x, y, z));
     }
 
     /**
@@ -71,5 +72,9 @@ public class EnhancedCraftingGui extends GuiContainer {
                 }
             }
         }
+    }
+
+    public static void setIsNEIActive(boolean b) {
+        isNEIActive = b;
     }
 }
