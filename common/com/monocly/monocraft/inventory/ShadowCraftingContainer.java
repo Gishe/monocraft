@@ -183,7 +183,13 @@ public class ShadowCraftingContainer extends Container
     @Override
     public ItemStack slotClick(int par1, int par2, int par3, EntityPlayer player)
     {
-        Slot s = (Slot)this.inventorySlots.get(par1);
+
+        Slot s  = null;
+
+        if (par1 >0)
+        {
+            s= (Slot)this.inventorySlots.get(par1);
+        }
 
         if (s != null && s instanceof SlotShadow)
         {
