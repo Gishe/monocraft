@@ -23,5 +23,8 @@ public class Strings
     public static final String CONTAINER_PORTABLE_CRAFTING = "Crafting";
 
     public static final String CONTAINER_INVENTORY = "Inventory";
+
+    public static final String PHANTOM_INGOT = "phantomIngot";
+
     
 }

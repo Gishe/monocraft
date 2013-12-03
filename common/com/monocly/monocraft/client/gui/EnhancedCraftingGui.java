@@ -33,7 +33,7 @@ public class EnhancedCraftingGui extends GuiContainer {
         super(new ShadowCraftingContainer(player.inventory, world, x, y, z));
 
         shadowCraftingContainer = (ShadowCraftingContainer)inventorySlots;
-        shadowCraftingContainer.craftResult.onInventoryChanged();
+        //shadowCraftingContainer.craftResult.onInventoryChanged();
     }
 
     /**

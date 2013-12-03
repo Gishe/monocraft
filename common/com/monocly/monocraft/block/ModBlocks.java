@@ -16,18 +16,21 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 public class ModBlocks
 {
     public static Block ect;
+    public static Block phantomChest;
     public static void init()
     {
         ect = new EnhancedCraftingTable(BlockInfo.ECT_ID);
         GameRegistry.registerBlock(ect, BlockInfo.ECT_KEY);
-        
+
+        phantomChest = new PhantomChest(BlockInfo.PHANTOM_CHEST_ID);
+        GameRegistry.registerBlock(phantomChest, BlockInfo.PHANTOM_CHEST_KEY);
         
     }
     
     public static void addNames()
     {
         LanguageRegistry.addName(ect, BlockInfo.ECT_NAME);
-        //LanguageRegistry.addName(counting, BlockInfo.COUNTING_NAME);
+        LanguageRegistry.addName(phantomChest, BlockInfo.PHANTOM_CHEST_NAME);
     }
     
     public static void registerTileEntities()
@@ -41,8 +44,7 @@ public class ModBlocks
      */
     public static void registerRecipes()
     {
-        // TODO Auto-generated method stub
-        
+
     }
    
 

@@ -19,7 +19,8 @@ public class ModItems
     {
         baseItems = new BaseItem[]
                 {
-                   new PersonalCraftingTable(ItemInfo.PERSONAL_CRAFTING_TABLE_ID) 
+                   new PersonalCraftingTable(ItemInfo.PERSONAL_CRAFTING_TABLE_ID),
+                   new PhantomIngot(ItemInfo.PHANTOM_INGOT_ID)
                 };
         
     }

@@ -1,6 +1,7 @@
 package com.monocly.monocraft.inventory;
 
 
+import com.monocly.monocraft.item.PersonalCraftingTable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -10,6 +11,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
@@ -37,6 +39,13 @@ public class ShadowCraftingContainer extends Container {
     private int posZ;
     public boolean canPlayerCraft = false;
 
+//    public ShadowCraftingContainer()
+//
+//    public ShadowCraftingContainer(, InventoryPlayer par1InventoryPlayer, World par2World, int par3, int par4, int par5)
+//    {
+//
+//    }
+
     public ShadowCraftingContainer(InventoryPlayer par1InventoryPlayer, World par2World, int par3, int par4, int par5) {
         this.worldObj = par2World;
         this.posX = par3;
@@ -52,7 +61,9 @@ public class ShadowCraftingContainer extends Container {
         // 3x3 crafting grid
         for (l = 0; l < 3; ++l) {
             for (i1 = 0; i1 < 3; ++i1) {
-                this.addSlotToContainer(new SlotShadow(this.craftMatrix, i1 + l * 3, 30 + i1 * 18, 17 + l * 18));
+                SlotShadow slotShadow = new SlotShadow(this.craftMatrix, i1 + l * 3, 30 + i1 * 18, 17 + l * 18);
+
+                this.addSlotToContainer(slotShadow);
             }
         }
 
@@ -141,15 +152,25 @@ public class ShadowCraftingContainer extends Container {
     public void onContainerClosed(EntityPlayer par1EntityPlayer) {
         super.onContainerClosed(par1EntityPlayer);
 
-//        if (!this.worldObj.isRemote) {
-//            for (int i = 0; i < 9; ++i) {
-//                ItemStack itemstack = this.craftMatrix.getStackInSlotOnClosing(i);
-//
-//                if (itemstack != null) {
-//                    par1EntityPlayer.dropPlayerItem(itemstack);
-//                }
-//            }
-//        }
+        if (!this.worldObj.isRemote) {
+            ItemStack heldItem = par1EntityPlayer.getHeldItem();
+            if (heldItem.stackTagCompound == null)
+            {
+                heldItem.stackTagCompound = new NBTTagCompound();
+            }
+
+            if (heldItem.getItem() instanceof PersonalCraftingTable)
+            {
+                for (int i = 0; i < 9; ++i) {
+                    ItemStack itemstack = this.craftMatrix.getStackInSlotOnClosing(i);
+
+                    if (itemstack != null) {
+                        heldItem.stackTagCompound.setInteger("Matrix_" + i, itemstack.itemID);
+                    }
+                }
+            }
+
+        }
     }
 
     public boolean canInteractWith(EntityPlayer player) {
